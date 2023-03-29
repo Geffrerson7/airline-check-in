@@ -4,6 +4,7 @@ from .utils import flight_data, seats_distribution
 
 # Create your views here.
 class AirlineCheckInView(APIView):
+    """Endpoint que recibe el id del vuelo y retorna la simulación del check-in de pasajeros de la aerolínea."""
     def get(self, request, id):
         try:
 
