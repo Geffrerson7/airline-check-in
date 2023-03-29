@@ -11,8 +11,16 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 import os
 from dotenv import load_dotenv
+
+load_dotenv()
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,10 +89,26 @@ WSGI_APPLICATION = 'checkin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'dj_db_conn_pool.backends.mysql',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASS'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': '3306',
+        },
+        
+        'OPTIONS': {
+            'connect_timeout': 30,  
+            'sql_mode': 'STRICT_TRANS_TABLES',  
+        },
+        'POOL_OPTIONS': {
+            'POOL_SIZE': 50,  
+            'MAX_OVERFLOW': 25,  
+            'RECYCLE': 300,  
+            'USE_THREADLOCAL': True,  
+            'PING_INTERVAL': 60, 
+        }
     }
-}
 
 
 # Password validation
