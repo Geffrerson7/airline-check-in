@@ -122,6 +122,102 @@ def right_seat_id(seat_id, seats_list):
     return right_seat_id
 
 
+def front_seat_id(seat_id, seats_list):
+    """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento frontal."""
+    seat_x = seats_list[seat_id - 1]
+
+    front_seat_id = None
+    for seat in seats_list:
+        if (
+            seat.seat_column == seat_x.seat_column
+            and seat.seat_row == seat_x.seat_row - 1
+            and seat.airplane_id == seat_x.airplane_id
+        ):
+            front_seat_id = seat.seat_id
+            break
+    return front_seat_id
+
+
+def back_seat_id(seat_id, seats_list):
+    """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento trasero."""
+    seat_x = seats_list[seat_id - 1]
+
+    back_seat_id = None
+    for seat in seats_list:
+        if (
+            seat.seat_column == seat_x.seat_column
+            and seat.seat_row == seat_x.seat_row + 1
+            and seat.airplane_id == seat_x.airplane_id
+        ):
+            back_seat_id = seat.seat_id
+            break
+    return back_seat_id
+
+
+def northeast_seat_id(seat_id, seats_list):
+    """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del noreste."""
+    seat_x = seats_list[seat_id - 1]
+
+    northeast_seat_id = None
+    for seat in seats_list:
+        if (
+            seat.seat_column == chr(ord(seat_x.seat_column) + 1)
+            and seat.seat_row == seat_x.seat_row - 1
+            and seat.airplane_id == seat_x.airplane_id
+        ):
+            northeast_seat_id = seat.seat_id
+            break
+    return northeast_seat_id
+
+
+def southeast_seat_id(seat_id, seats_list):
+    """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del sureste."""
+    seat_x = seats_list[seat_id - 1]
+
+    southeast_seat_id = None
+    for seat in seats_list:
+        if (
+            seat.seat_column == chr(ord(seat_x.seat_column) + 1)
+            and seat.seat_row == seat_x.seat_row + 1
+            and seat.airplane_id == seat_x.airplane_id
+        ):
+            southeast_seat_id = seat.seat_id
+            break
+    return southeast_seat_id
+
+
+def northwest_seat_id(seat_id: int, seats_list):
+    """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del noroeste."""
+    seat_x = seats_list[seat_id - 1]
+
+    northwest_seat_id = None
+    for seat in seats_list:
+        if (
+            seat.seat_column == chr(ord(seat_x.seat_column) - 1)
+            and seat.seat_row == seat_x.seat_row - 1
+            and seat.airplane_id == seat_x.airplane_id
+        ):
+            northwest_seat_id = seat.seat_id
+            break
+    return northwest_seat_id
+
+
+def southwest_seat_id(seat_id, seats_list):
+    """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del suroeste."""
+    seat_x = seats_list[seat_id - 1]
+
+    southwest_seat_id = None
+    for seat in seats_list:
+        if (
+            seat.seat_column == chr(ord(seat_x.seat_column) - 1)
+            and seat.seat_row == seat_x.seat_row + 1
+            and seat.airplane_id == seat_x.airplane_id
+        ):
+            southwest_seat_id = seat.seat_id
+            break
+    return southwest_seat_id
+
+
 def seats_distribution(data):
     """Función que recibe los datos de un veulo y retorna los mismos datos pero con asientos asignados a cada pasajero"""
     if not data:
@@ -226,6 +322,232 @@ def seats_distribution(data):
                             break
                 # Actualizo la cantidad de asientos disponibles
                 available_seats_ids[passenger["seatTypeId"]] = list_of_empty_seat_ids
+
+    # Distribución de asientos para adultos que tienen el mismo purchase id
+    for passenger in passengers:
+        # Id de asientos disponibles segun el tipo de asiento del pasajero
+        list_of_empty_seat_ids = available_seats_ids[passenger["seatTypeId"]]
+        assigned = False
+        # Si el pasajero es menor de edad y no tiene asiento
+        if passenger["age"] >= 18 and passenger["seatId"] == None:
+            companions = [
+                companion
+                for companion in passengers
+                if companion.get("purchaseId") == passenger["purchaseId"]
+                and companion.get("seatId") == None
+                and companion.get("passengerId") != passenger["passengerId"]
+            ]
+            if companions != []:
+                for companion in companions:
+                    if passengers[passengers.index(companion)]["seatId"] == None:
+                        for seat_id in list_of_empty_seat_ids:
+                            # Si es que existe el asiento vecino izquierdo
+                            if (
+                                left_seat_id(seat_id, seats_data)
+                                and left_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = left_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        left_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            # Si es que existe el asiento vecino derecho
+                            elif (
+                                right_seat_id(seat_id, seats_data)
+                                and right_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = right_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        right_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            # Si es que existe el asiento vecino frontal
+                            elif (
+                                front_seat_id(seat_id, seats_data)
+                                and front_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = front_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        front_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            # Si es que existe el asiento vecino trasero
+                            elif (
+                                back_seat_id(seat_id, seats_data)
+                                and back_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = back_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        back_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            # Si es que existe el asiento vecino noreste
+                            elif (
+                                northeast_seat_id(seat_id, seats_data)
+                                and northeast_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = northeast_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        northeast_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            # Si es que existe el asiento vecino sureste
+                            elif (
+                                southeast_seat_id(seat_id, seats_data)
+                                and southeast_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = southeast_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        southeast_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            # Si es que existe el asiento vecino noroeste
+                            elif (
+                                northwest_seat_id(seat_id, seats_data)
+                                and northwest_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = northwest_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        northwest_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+                            elif (
+                                southwest_seat_id(seat_id, seats_data)
+                                and southwest_seat_id(seat_id, seats_data)
+                                in list_of_empty_seat_ids
+                            ):
+                                if passenger["seatId"] == None:
+                                    # Actualizamos el valor del seatId del pasajero
+                                    passenger["seatId"] = seat_id
+                                    # Eliminamos el id del asiento asignado al pasajero de la lista de asientos disponibles
+                                    list_of_empty_seat_ids.pop(
+                                        list_of_empty_seat_ids.index(seat_id)
+                                    )
+                                # Actualizamos el valor del seatId del acompañanate del pasajero
+                                passengers[passengers.index(companion)][
+                                    "seatId"
+                                ] = southwest_seat_id(seat_id, seats_data)
+                                # Eliminamos el id del asiento asignado al acompañante del pasajero de la lista de asientos disponibles
+                                list_of_empty_seat_ids.pop(
+                                    list_of_empty_seat_ids.index(
+                                        southwest_seat_id(seat_id, seats_data)
+                                    )
+                                )
+                                assigned = True
+
+                            if assigned:
+                                break
+                # Se actualiza la lista de id de asientos disponibles
+                available_seats_ids[passenger["seatTypeId"]] = list_of_empty_seat_ids
+                
+    # Distribución de asientos para los pasajeros restantes
+    for passenger in passengers:
+        # Id de asientos disponibles segun el tipo de asiento del pasajero
+        list_of_empty_seat_ids = available_seats_ids[passenger["seatTypeId"]]
+
+        if passenger["seatId"] == None:
+            passenger["seatId"] = list_of_empty_seat_ids[0]
+            list_of_empty_seat_ids.pop(0)
+            available_seats_ids[passenger["seatTypeId"]] = list_of_empty_seat_ids
 
     data["passengers"] = passengers
 
