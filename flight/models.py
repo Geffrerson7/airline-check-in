@@ -72,7 +72,7 @@ class Seat(models.Model):
 
 
 class BoardingPass(models.Model):
-    
+
     boarding_pass_id = models.AutoField(primary_key=True)
     purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
     passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)

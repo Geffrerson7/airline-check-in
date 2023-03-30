@@ -1,6 +1,7 @@
 from .models import Flight, BoardingPass, Seat
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 from django.db.utils import OperationalError
+from typing import List
 
 
 @retry(
@@ -10,7 +11,7 @@ from django.db.utils import OperationalError
         OperationalError
     ),  # Solo reintenta si es un error de conexión
 )
-def flight_data(flight_id):
+def flight_data(flight_id: int) -> List:
     """Función que recibe el id del vuelo y retorna los datos del vuelo en formato CamelCase."""
     flights = Flight.objects.filter(flight_id=flight_id)
     if not flights:
@@ -65,7 +66,7 @@ def flight_data(flight_id):
         OperationalError
     ),  # Solo reintenta si es un error de conexión
 )
-def seats_list():
+def seats_list() -> List:
     """Función que devuelve una lista de todas las sillas ordenadas por id"""
     seats_list = Seat.objects.all().order_by("seat_id")
     seats = []
@@ -74,7 +75,7 @@ def seats_list():
     return seats
 
 
-def occupied_seats_id(passengers_list):
+def occupied_seats_id(passengers_list: List) -> List:
     """Función que recibe una lista de datos de pasajeros de un vuelo y retorna la lista de id de asientos ocupados."""
     occupied_seats_id = []
 
@@ -92,7 +93,7 @@ def occupied_seats_id(passengers_list):
         OperationalError
     ),  # Solo reintenta si es un error de conexión
 )
-def list_of_available_seat_type_ids(seat_type_id, flight_data):
+def list_of_available_seat_type_ids(seat_type_id: int, flight_data: List) -> List:
     "Función que recibe el id de tipo de aiento y los datos del vuelo y retorna los id de los asientos disponibles por clase."
     seats = Seat.objects.filter(
         airplane_id=flight_data["airplaneId"], seat_type_id=seat_type_id
@@ -113,7 +114,7 @@ def list_of_available_seat_type_ids(seat_type_id, flight_data):
     return seat_available_type_id_list
 
 
-def left_seat_id(seat_id, seats_list):
+def left_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento de la izquierda."""
     seat_x = seats_list[seat_id - 1]
 
@@ -129,7 +130,7 @@ def left_seat_id(seat_id, seats_list):
     return left_seat_id
 
 
-def right_seat_id(seat_id, seats_list):
+def right_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento de la derecha."""
     seat_x = seats_list[seat_id - 1]
 
@@ -145,7 +146,7 @@ def right_seat_id(seat_id, seats_list):
     return right_seat_id
 
 
-def front_seat_id(seat_id, seats_list):
+def front_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento frontal."""
     seat_x = seats_list[seat_id - 1]
 
@@ -161,7 +162,7 @@ def front_seat_id(seat_id, seats_list):
     return front_seat_id
 
 
-def back_seat_id(seat_id, seats_list):
+def back_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento trasero."""
     seat_x = seats_list[seat_id - 1]
 
@@ -177,7 +178,7 @@ def back_seat_id(seat_id, seats_list):
     return back_seat_id
 
 
-def northeast_seat_id(seat_id, seats_list):
+def northeast_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del noreste."""
     seat_x = seats_list[seat_id - 1]
 
@@ -193,7 +194,7 @@ def northeast_seat_id(seat_id, seats_list):
     return northeast_seat_id
 
 
-def southeast_seat_id(seat_id, seats_list):
+def southeast_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del sureste."""
     seat_x = seats_list[seat_id - 1]
 
@@ -209,7 +210,7 @@ def southeast_seat_id(seat_id, seats_list):
     return southeast_seat_id
 
 
-def northwest_seat_id(seat_id: int, seats_list):
+def northwest_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del noroeste."""
     seat_x = seats_list[seat_id - 1]
 
@@ -225,7 +226,7 @@ def northwest_seat_id(seat_id: int, seats_list):
     return northwest_seat_id
 
 
-def southwest_seat_id(seat_id, seats_list):
+def southwest_seat_id(seat_id: int, seats_list: List) -> int:
     """Función que recibe el id de un asiento y una lista de total de asientos y retorna el id del asiento del suroeste."""
     seat_x = seats_list[seat_id - 1]
 
@@ -241,8 +242,9 @@ def southwest_seat_id(seat_id, seats_list):
     return southwest_seat_id
 
 
-def seats_distribution(data):
+def seats_distribution(id: int) -> List:
     """Función que recibe los datos de un veulo y retorna los mismos datos pero con asientos asignados a cada pasajero"""
+    data = flight_data(id)
     if not data:
         return None
 
