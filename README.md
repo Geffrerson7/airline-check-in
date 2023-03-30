@@ -165,11 +165,13 @@ http://127.0.0.1:8000/
 * **Tenacity** (v. 8.2.2) [Source](https://tenacity.readthedocs.io/en/latest/)
 * **django-cors-headers** (v. 3.14.0) [Source](https://pypi.org/project/django-cors-headers/)
 * **drf-yasg** (v. 1.21.5) [Source](https://drf-yasg.readthedocs.io/en/stable/)
+* **gunicorn** (v. 20.1.0) [Source](https://gunicorn.org/)
+* **whitenoise** (v. 6.4.0)[Source](https://whitenoise.readthedocs.io/en/latest/)
 * **Railway**  [Source](https://docs.railway.app/)
 
 ## Documentación
 Para la documentación del proyecto se utilizó Swagger por su capacidad para generar documentación dinámica y en tiempo real de los servicios web que se están construyendo.
-La documentación del projecto en swagger está en este [Link](http://example.com/)
+La documentación del projecto en swagger está en este [Link](https://airline-check-in-production.up.railway.app/swagger/)
 
 ## Referencias
 
@@ -178,7 +180,7 @@ Para diseñar la lógica de programación del proyecto usé el artículo ["Exper
 ## Demo
 Para el despliegue del proyecto se utilizó Railway porque puede integrarse en un flujo de trabajo de integración continua (CI) y entrega continua (CD) utilizando pruebas automatizadas y herramientas de automatización de despliegue.
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ZweBXA)
+[![Deploy on Railway](https://railway.app/button.svg)](https://airline-check-in-production.up.railway.app/)
 
 ## Autor
 
