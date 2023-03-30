@@ -92,7 +92,7 @@ WSGI_APPLICATION = "checkin.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "dj_db_conn_pool.backends.mysql",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": env("DB_NAME"),
         "USER": env("DB_USER"),
         "PASSWORD": env("DB_PASSWORD"),
