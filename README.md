@@ -104,13 +104,13 @@ Para ejecutar este proyecto, necesitará agregar las siguientes variables de ent
 
 `SECRET_KEY`
 
-`DATABASE_NAME`
+`DB_NAME`
 
-`DATABASE_USER`
+`DB_USER`
 
-`DATABASE_PASS`
+`DB_PASSWORD`
 
-`DATABASE_HOST`
+`DB_HOST`
 
 Clonar el proyecto
 

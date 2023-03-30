@@ -91,11 +91,11 @@ WSGI_APPLICATION = "checkin.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "dj_db_conn_pool.backends.mysql",
-        "NAME": env("DATABASE_NAME"),
-        "USER": env("DATABASE_USER"),
-        "PASSWORD": env("DATABASE_PASS"),
-        "HOST": env("DATABASE_HOST"),
-        "PORT": env("PORT"),
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     },
 }
 
