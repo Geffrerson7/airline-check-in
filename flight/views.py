@@ -1,21 +1,37 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .utils import flight_data, seats_distribution
+from .service import seats_distribution
 import traceback
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 class AirlineCheckInView(APIView):
-    """Endpoint que recibe el id del vuelo y retorna la simulación del check-in de pasajeros de la aerolínea."""
-
+    @swagger_auto_schema(
+        operation_description="Get information about passengers on a flight by ID.",
+        responses={
+            200: "Successful response",
+            404: "Flight not found",
+            400: "Error connecting to the database",
+        },
+        tags=["Flights"],
+        manual_parameters=[
+            openapi.Parameter(
+                "id",
+                openapi.IN_PATH,
+                type=openapi.TYPE_INTEGER,
+                description="ID of the flight to get passengers from",
+                required=True,
+            ),
+        ],
+    )
     def get(self, request, id):
+
         try:
 
-            flight_id = id
-            data = flight_data(flight_id)
+            simulation_data = seats_distribution(id)
 
-            simulation_data = seats_distribution(data)
-
-            if data == None or simulation_data == None:
+            if simulation_data == None:
                 return Response({"code": 404, "data": {}})
 
             return Response({"code": 200, "data": simulation_data})
