@@ -7,10 +7,12 @@ from django.shortcuts import redirect
 
 class ApiRootView(APIView):
     """Endpoint que redirecciona la ruta raiz a la ruta /flights/1/passengers."""
-    def get(self, request, format=None):
 
+    def get(self, request, format=None):
+        url_with_id = "/"
         for app_name in settings.INSTALLED_APPS:
             try:
+
                 if app_name == "flight":
                     app_urls = import_module(f"{app_name}.urls")
                     if app_urls:

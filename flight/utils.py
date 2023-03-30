@@ -2,10 +2,13 @@ from .models import Flight, BoardingPass, Seat
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 from django.db.utils import OperationalError
 
+
 @retry(
     stop=stop_after_attempt(5),  # Intenta hasta 5 veces
     wait=wait_fixed(1),  # Espera 1 segundo antes de intentar de nuevo
-    retry=retry_if_exception_type(OperationalError),  # Solo reintenta si es un error de conexión
+    retry=retry_if_exception_type(
+        OperationalError
+    ),  # Solo reintenta si es un error de conexión
 )
 def flight_data(flight_id):
     """Función que recibe el id del vuelo y retorna los datos del vuelo en formato CamelCase."""
@@ -54,10 +57,13 @@ def flight_data(flight_id):
         )
     return data
 
+
 @retry(
     stop=stop_after_attempt(5),  # Intenta hasta 5 veces
     wait=wait_fixed(1),  # Espera 1 segundo antes de intentar de nuevo
-    retry=retry_if_exception_type(OperationalError),  # Solo reintenta si es un error de conexión
+    retry=retry_if_exception_type(
+        OperationalError
+    ),  # Solo reintenta si es un error de conexión
 )
 def seats_list():
     """Función que devuelve una lista de todas las sillas ordenadas por id"""
@@ -78,10 +84,13 @@ def occupied_seats_id(passengers_list):
 
     return occupied_seats_id
 
+
 @retry(
     stop=stop_after_attempt(5),  # Intenta hasta 5 veces
     wait=wait_fixed(1),  # Espera 1 segundo antes de intentar de nuevo
-    retry=retry_if_exception_type(OperationalError),  # Solo reintenta si es un error de conexión
+    retry=retry_if_exception_type(
+        OperationalError
+    ),  # Solo reintenta si es un error de conexión
 )
 def list_of_available_seat_type_ids(seat_type_id, flight_data):
     "Función que recibe el id de tipo de aiento y los datos del vuelo y retorna los id de los asientos disponibles por clase."
@@ -552,7 +561,7 @@ def seats_distribution(data):
                                 break
                 # Se actualiza la lista de id de asientos disponibles
                 available_seats_ids[passenger["seatTypeId"]] = list_of_empty_seat_ids
-                
+
     # Distribución de asientos para los pasajeros restantes
     for passenger in passengers:
         # Id de asientos disponibles segun el tipo de asiento del pasajero
