@@ -286,6 +286,7 @@ def seats_distribution(id: int) -> List:
                 if companion.get("purchaseId") == passenger["purchaseId"]
                 and companion.get("seatId") == None
                 and companion.get("passengerId") != passenger["passengerId"]
+                and companion.get("passengerId") >= 18
             ]
             for companion in companions:
                 if passengers[passengers.index(companion)]["seatId"] == None:
