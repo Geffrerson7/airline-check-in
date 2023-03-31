@@ -129,7 +129,7 @@ $ cd airline-check-in
 Crear un entorno virtual
 
 ```sh
-$ python virtualenv venv
+$ virtualenv venv
 ```
 
 Activar el entorno virtual
