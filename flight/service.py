@@ -243,22 +243,22 @@ def southwest_seat_id(seat_id: int, seats_list: List) -> int:
 
 
 def seats_distribution(id: int) -> List:
-    """Función que recibe los datos de un veulo y retorna los mismos datos pero con asientos asignados a cada pasajero"""
+    """Función que recibe el id de un vuelo y retorna los mismos datos pero con asientos asignados a cada pasajero"""
     data = flight_data(id)
     if not data:
         return None
 
-    seats_data = seats_list()  # Lista de de datos de todos los asientos
+    seats_data = seats_list()  # Lista de datos de todos los asientos
 
     first_class = list_of_available_seat_type_ids(
         1, data
-    )  # Lista de ids asientos de primera clase
+    )  # Lista de ids de asientos de primera clase
     premiun_economic_class = list_of_available_seat_type_ids(
         2, data
-    )  # Lista de ids asientos de clase económica premiun
+    )  # Lista de ids de asientos de clase económica premiun
     economic_class = list_of_available_seat_type_ids(
         3, data
-    )  # Lista de ids asientos de clase económica
+    )  # Lista de ids de asientos de clase económica
 
     available_seats_ids = {
         1: first_class,
@@ -286,7 +286,7 @@ def seats_distribution(id: int) -> List:
                 if companion.get("purchaseId") == passenger["purchaseId"]
                 and companion.get("seatId") == None
                 and companion.get("passengerId") != passenger["passengerId"]
-                and companion.get("passengerId") >= 18
+                and companion.get("age") >= 18
             ]
             for companion in companions:
                 if passengers[passengers.index(companion)]["seatId"] == None:
