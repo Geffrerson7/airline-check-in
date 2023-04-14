@@ -168,7 +168,7 @@ http://127.0.0.1:8000/
 * **django-cors-headers** (v. 3.14.0) [Source](https://pypi.org/project/django-cors-headers/)
 * **drf-yasg** (v. 1.21.5) [Source](https://drf-yasg.readthedocs.io/en/stable/)
 * **gunicorn** (v. 20.1.0) [Source](https://gunicorn.org/)
-* **whitenoise** (v. 6.4.0)[Source](https://whitenoise.readthedocs.io/en/latest/)
+* **whitenoise** (v. 6.4.0) [Source](https://whitenoise.readthedocs.io/en/latest/)
 * **Railway**  [Source](https://docs.railway.app/)
 
 ## Documentación
