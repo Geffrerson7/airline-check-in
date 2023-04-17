@@ -40,7 +40,7 @@ Los puntos a tomar en cuenta son:
 
 * El servicio debe tener la siguiente estructura:
 
-```http
+```
   GET /flights/:id/passengers
 ```
 
