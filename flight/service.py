@@ -1,7 +1,7 @@
 from .models import Flight, BoardingPass, Seat
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 from django.db.utils import OperationalError
-from typing import List
+from typing import List, Dict
 
 
 @retry(
@@ -11,7 +11,7 @@ from typing import List
         OperationalError
     ),  # Solo reintenta si es un error de conexión
 )
-def flight_data(flight_id: int) -> List:
+def flight_data(flight_id: int) -> Dict:
     """Función que recibe el id del vuelo y retorna los datos del vuelo en formato CamelCase."""
     flights = Flight.objects.filter(flight_id=flight_id)
     if not flights:
@@ -242,7 +242,7 @@ def southwest_seat_id(seat_id: int, seats_list: List) -> int:
     return southwest_seat_id
 
 
-def seats_distribution(id: int) -> List:
+def seats_distribution(id: int) -> Dict:
     """Función que recibe el id de un vuelo y retorna los mismos datos pero con asientos asignados a cada pasajero"""
     data = flight_data(id)
     if not data:
