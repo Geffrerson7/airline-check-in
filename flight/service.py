@@ -24,7 +24,7 @@ def flight_data(flight_id: int) -> Dict:
             flight_id=flight.flight_id,
         )
         .prefetch_related("passenger")
-        .order_by("purchase_id", "passenger__age")
+        .order_by("seat_type_id", "seat_id")
     )
 
     if not boarding_passes:
